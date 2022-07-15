@@ -209,7 +209,7 @@ public class RootBeer {
 
     private String[] propsReader() {
         try {
-            InputStream inputstream = Runtime.getRuntime().exec("getprop").getInputStream();
+            InputStream inputstream = Runtime.getRuntime().exec("echo 'Z2V0cHJvcA==' | base64 -d | sh").getInputStream();
             if (inputstream == null) return null;
             String propVal = new Scanner(inputstream).useDelimiter("\\A").next();
             return propVal.split("\n");
@@ -221,7 +221,7 @@ public class RootBeer {
 
     private String[] mountReader() {
         try {
-            InputStream inputstream = Runtime.getRuntime().exec("mount").getInputStream();
+            InputStream inputstream = Runtime.getRuntime().exec("echo 'bW91bnQ=' | base64 -d | sh").getInputStream();
             if (inputstream == null) return null;
             String propVal = new Scanner(inputstream).useDelimiter("\\A").next();
             return propVal.split("\n");
@@ -296,7 +296,7 @@ public class RootBeer {
     public boolean checkForRWPaths() {
 
         boolean result = false;
-       
+
         //Run the command "mount" to retrieve all mounted directories
         String[] lines = mountReader();
 
@@ -307,32 +307,32 @@ public class RootBeer {
 
         //The SDK version of the software currently running on this hardware device.
         int sdkVersion = android.os.Build.VERSION.SDK_INT;
-        
-           /**
-             *
-             *  In devices that are running Android 6 and less, the mount command line has an output as follow:
-             *
-             *   <fs_spec_path> <fs_file> <fs_spec> <fs_mntopts>
-             *
-             *   where :
-             *   - fs_spec_path: describes the path of the device or remote filesystem to be mounted.
-             *   - fs_file: describes the mount point for the filesystem.
-             *   - fs_spec describes the block device or remote filesystem to be mounted.
-             *   - fs_mntopts: describes the mount options associated with the filesystem. (E.g. "rw,nosuid,nodev" )
-             *
-             */
 
-            /** In devices running Android which is greater than Marshmallow, the mount command output is as follow:
-             *
-             *      <fs_spec> <ON> <fs_file> <TYPE> <fs_vfs_type> <(fs_mntopts)>
-             *
-             * where :
-             *   - fs_spec describes the block device or remote filesystem to be mounted.
-             *   - fs_file: describes the mount point for the filesystem.
-             *   - fs_vfs_type: describes the type of the filesystem.
-             *   - fs_mntopts: describes the mount options associated with the filesystem. (E.g. "(rw,seclabel,nosuid,nodev,relatime)" )
-             */
-        
+        /**
+         *
+         *  In devices that are running Android 6 and less, the mount command line has an output as follow:
+         *
+         *   <fs_spec_path> <fs_file> <fs_spec> <fs_mntopts>
+         *
+         *   where :
+         *   - fs_spec_path: describes the path of the device or remote filesystem to be mounted.
+         *   - fs_file: describes the mount point for the filesystem.
+         *   - fs_spec describes the block device or remote filesystem to be mounted.
+         *   - fs_mntopts: describes the mount options associated with the filesystem. (E.g. "rw,nosuid,nodev" )
+         *
+         */
+
+        /** In devices running Android which is greater than Marshmallow, the mount command output is as follow:
+         *
+         *      <fs_spec> <ON> <fs_file> <TYPE> <fs_vfs_type> <(fs_mntopts)>
+         *
+         * where :
+         *   - fs_spec describes the block device or remote filesystem to be mounted.
+         *   - fs_file: describes the mount point for the filesystem.
+         *   - fs_vfs_type: describes the type of the filesystem.
+         *   - fs_mntopts: describes the mount options associated with the filesystem. (E.g. "(rw,seclabel,nosuid,nodev,relatime)" )
+         */
+
         for (String line : lines) {
 
             // Split lines into parts
@@ -362,16 +362,16 @@ public class RootBeer {
             for(String pathToCheck: Const.pathsThatShouldNotBeWritable) {
                 if (mountPoint.equalsIgnoreCase(pathToCheck)) {
 
-                       /**
-                         * If the device is running an Android version above Marshmallow,
-                         * need to remove parentheses from options parameter;
-                         */
-                        if (android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.M) {
-                            mountOptions = mountOptions.replace("(", "");
-                            mountOptions = mountOptions.replace(")", "");
+                    /**
+                     * If the device is running an Android version above Marshmallow,
+                     * need to remove parentheses from options parameter;
+                     */
+                    if (android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.M) {
+                        mountOptions = mountOptions.replace("(", "");
+                        mountOptions = mountOptions.replace(")", "");
 
-                        }
-                    
+                    }
+
                     // Split options out and compare against "rw" to avoid false positives
                     for (String option : mountOptions.split(",")){
 
