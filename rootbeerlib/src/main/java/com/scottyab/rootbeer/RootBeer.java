@@ -2,6 +2,7 @@ package com.scottyab.rootbeer;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 
 import com.scottyab.rootbeer.util.QLog;
 
@@ -211,6 +212,7 @@ public class RootBeer {
         try {
             InputStream inputstream = Runtime.getRuntime().exec("getprop").getInputStream();
             if (inputstream == null) return null;
+
             String propVal = new Scanner(inputstream).useDelimiter("\\A").next();
             System.out.println("Props Reader");
             System.out.println(Arrays.toString(propVal.split("\n")));
@@ -270,6 +272,9 @@ public class RootBeer {
         dangerousProps.put("ro.secure", "0");
 
         boolean result = false;
+
+        System.out.println("Sys Props - ro.debuggable - " + System.getProperty("ro.debuggable"));
+        System.out.println("Sys Props - ro.secure - " + System.getProperty("ro.secure"));
 
         String[] lines = propsReader();
 
