@@ -213,7 +213,7 @@ public class RootBeer {
             if (inputstream == null) return null;
             String propVal = new Scanner(inputstream).useDelimiter("\\A").next();
             System.out.println("Props Reader");
-            System.out.println(propVal.split("\n").toString());
+            System.out.println(Arrays.toString(propVal.split("\n")));
             return propVal.split("\n");
         } catch (IOException | NoSuchElementException e) {
             QLog.e(e);
@@ -227,7 +227,7 @@ public class RootBeer {
             if (inputstream == null) return null;
             String propVal = new Scanner(inputstream).useDelimiter("\\A").next();
             System.out.println("Mound Reader");
-            System.out.println(propVal.split("\n").toString());
+            System.out.println(Arrays.toString(propVal.split("\n")));
             return propVal.split("\n");
         } catch (IOException | NoSuchElementException e) {
             QLog.e(e);
